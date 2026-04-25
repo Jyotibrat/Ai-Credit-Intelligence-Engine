@@ -798,7 +798,7 @@ if run:
 
         # Income check
         if total_income < 25000:
-            reasons.append("Total household income is below the recommended threshold (Rs25,000).")
+            reasons.append("Total household income is below the recommended threshold (Rs.25,000).")
 
         # EMI ratio check
         if emi_ratio > 0.5:
@@ -864,10 +864,10 @@ if run:
     content.append(Spacer(1, 10))
     table = Table([
         ["Metric", "Value"],
-        ["Total Income", f"Rs {total_income:,}"],
-        ["Loan Amount", f"Rs {loan_amount:,}"],
+        ["Total Income", f"Rs. {total_income:,}"],
+        ["Loan Amount", f"Rs. {loan_amount:,}"],
         ["Loan Term", f"{loan_term} months"],
-        ["EMI", f"Rs {round(emi,2)}"]
+        ["EMI", f"Rs. {round(emi,2)}"]
     ])
 
     table.setStyle(TableStyle([
