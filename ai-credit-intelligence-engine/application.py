@@ -3,8 +3,9 @@ import os
 import pandas as pd
 import pickle
 import numpy as np
+import hashlib
 
-# -----------------------------------
+
 # Page Config
 # -----------------------------------
 st.set_page_config(
@@ -12,6 +13,141 @@ st.set_page_config(
     page_icon="🏦",
     layout="wide"
 )
+# -----------------------------------
+# USER DATABASE FUNCTIONS
+# -----------------------------------
+USER_FILE = "users.csv"
+
+def load_users():
+    if os.path.exists(USER_FILE):
+        return pd.read_csv(USER_FILE)
+    else:
+        return pd.DataFrame(columns=["username", "password"])
+
+def save_user(username, password):
+    df = load_users()
+    new_user = pd.DataFrame([[username, password]], columns=["username", "password"])
+    df = pd.concat([df, new_user], ignore_index=True)
+    df.to_csv(USER_FILE, index=False)
+
+def update_password(username, new_password):
+    df = load_users()
+    df.loc[df["username"] == username, "password"] = hash_password(new_password)
+    df.to_csv(USER_FILE, index=False)
+
+# -----------------------------------
+# PASSWORD HASHING
+# -----------------------------------
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+# ---------------- SESSION ----------------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if "username" not in st.session_state:
+    st.session_state.username = None
+        
+
+import re
+
+def is_valid_username(username):
+    return re.match(r"^[a-zA-Z0-9_.]{4,20}$", username)
+
+def is_valid_password(password):
+    return (
+        len(password) >= 6 and
+        re.search(r"[A-Z]", password) and
+        re.search(r"[a-z]", password) and
+        re.search(r"[0-9]", password)
+    )
+
+# ---------------- AUTH UI ----------------
+def show_auth():
+    st.markdown("## 🔐 Welcome to LoanSahayak")
+
+    choice = st.radio("Select Option", ["Login", "Signup"])
+    users = load_users()
+
+    # -------- LOGIN --------
+    if choice == "Login":
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+
+        if st.button("Login"):
+
+            if username == "" or password == "":
+                st.warning("Please enter both fields")
+
+            else:
+                user = users[
+                    (users["username"] == username) &
+                    (users["password"] == hash_password(password))
+                ]
+
+                if not user.empty:
+                    st.session_state.logged_in = True
+                    st.session_state.username = username
+                    st.success("Login Successful!")
+                    st.rerun()
+                else:
+                    st.error("Invalid username or password")
+
+    # -------- SIGNUP --------
+    else:
+        new_user = st.text_input("Create Username")
+        new_pass = st.text_input("Create Password", type="password")
+        confirm_pass = st.text_input("Confirm Password", type="password")
+
+        if st.button("Signup"):
+
+            if new_user == "" or new_pass == "":
+                st.warning("Fields cannot be empty")
+
+            elif not is_valid_username(new_user):
+                st.error("Username must be 4-20 chars (letters, numbers, _ . only)")
+
+            elif not is_valid_password(new_pass):
+                st.error("Password must have uppercase, lowercase & number")
+
+            elif new_pass != confirm_pass:
+                st.error("Passwords do not match")
+
+            elif new_user.lower() in users["username"].str.lower().values:
+                st.warning("Username already exists")
+
+            else:
+                save_user(new_user, hash_password(new_pass))
+                st.success("Account created successfully! Please login.")
+# -----------------------------------
+# LOGIN CHECK
+# -----------------------------------
+if not st.session_state.logged_in:
+    show_auth()
+    st.stop()
+
+st.markdown(f"""
+<div style="
+    padding: 14px 20px;
+    border-radius: 12px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: #E8C97A;
+    font-size: 16px;
+    margin-bottom: 18px;
+">
+    👋 Welcome !! <b>{st.session_state.username}</b> ..System status: Active. LoanSahayak is ready to transform your data into definitive financial insights
+</div>
+""", unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+    
 
 # -----------------------------------
 # Premium UI Styling — Luxury Finance Aesthetic
@@ -337,6 +473,7 @@ input[type="number"]:focus {
     background: #070B14 !important;
     border-right: 1px solid var(--border) !important;
 }
+     
 
 [data-testid="stSidebar"] .stMarkdown p,
 [data-testid="stSidebar"] .stMarkdown li,
@@ -436,6 +573,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+
 # -----------------------------------
 # Sidebar
 # -----------------------------------
@@ -452,6 +590,10 @@ st.sidebar.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
+
+        
+    
 
 # System Info (Improved readability)
 st.sidebar.markdown("""
