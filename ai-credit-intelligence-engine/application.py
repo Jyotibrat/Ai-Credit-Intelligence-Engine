@@ -13,6 +13,7 @@ st.set_page_config(
     page_icon="🏦",
     layout="wide"
 )
+
 # -----------------------------------
 # USER DATABASE FUNCTIONS
 # -----------------------------------
@@ -63,61 +64,232 @@ def is_valid_password(password):
 
 # ---------------- AUTH UI ----------------
 def show_auth():
-    st.markdown("## 🔐 Welcome to LoanSahayak")
+    st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    choice = st.radio("Select Option", ["Login", "Signup"])
+#MainMenu {visibility: hidden !important;}
+header[data-testid="stHeader"] {display: none !important;}
+.stDeployButton {display: none !important;}
+[data-testid="stToolbar"] {display: none !important;}
+footer {visibility: hidden !important;}
+
+:root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: rgba(201,168,76,0.15);
+    --bg-deep: #070B14;
+    --border: rgba(201,168,76,0.2);
+    --border-bright: rgba(201,168,76,0.5);
+    --text-primary: #F0EBE0;
+    --text-secondary: #9A9080;
+    --text-muted: #5A5448;
+}
+
+html, body, [data-testid="stAppViewContainer"] {
+    background: var(--bg-deep) !important;
+    color: var(--text-primary) !important;
+    font-family: 'DM Sans', sans-serif !important;
+}
+
+.main .block-container {
+    padding: 0rem 3rem 4rem !important;
+    max-width: 1200px !important;
+    margin-top: -80px !important;
+}
+                
+section[data-testid="stMain"] > div:first-child {
+    padding-top: 0 !important;
+}
+
+label, [data-testid="stWidgetLabel"] {
+    color: var(--text-secondary) !important;
+    font-size: 12px !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    font-weight: 500 !important;
+}
+
+input[type="text"], input[type="password"], .stTextInput input {
+    background: #FFFFFF !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    color: #070B14;
+    font-family: 'DM Sans', sans-serif !important;
+}
+
+.stButton > button {
+    background: linear-gradient(135deg, #C9A84C 0%, #8B6914 100%) !important;
+    color: #070B14 !important;
+    border: none !important;
+    border-radius: 12px !important;
+    height: 54px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    width: 100% !important;
+    font-family: 'DM Sans', sans-serif !important;
+    box-shadow: 0 4px 24px rgba(201,168,76,0.25) !important;
+    transition: all 0.25s ease !important;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 32px rgba(201,168,76,0.4) !important;
+}
+                
+[role="radiogroup"] label p,
+[role="radiogroup"] label span,
+[data-testid="stRadio"] label p,
+[data-testid="stRadio"] span {
+    color: #F0EBE0 !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    letter-spacing: 1px !important;
+}
+
+[data-testid="stRadio"] [data-baseweb="radio"] div:first-child {
+    border-color:  #C9A84C !important;
+    background-color: transparent !important;
+}
+
+[data-testid="stRadio"] input:checked ~ div,
+[data-testid="stRadio"] [aria-checked="true"] div:first-child {
+    background-color: #C9A84C !important;
+    border-color: #C9A84C !important;
+}
+
+
+
+.stSuccess, .stError, .stWarning {
+    border-radius: 14px !important;
+    font-family: 'DM Sans', sans-serif !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+    # Financial Profile top-right
+    st.markdown("""
+<div style="
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-top: 4px;
+">
+    <div style="
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: rgba(201,168,76,0.15);
+        border: 1px solid rgba(201,168,76,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+    ">💼</div>
+    <div style="
+        font-family: 'Playfair Display', serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: #F0EBE0;
+    ">Financial Profile</div>
+</div>
+""", unsafe_allow_html=True)
+
+    # Hero card
+    st.markdown("""
+<div style="
+    text-align: center;
+    padding: 60px 40px 40px;
+    border-radius: 24px;
+    border: 1px solid rgba(201,168,76,0.2);
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%),
+                linear-gradient(180deg, #0C1525 0%, #070B14 100%);
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+">
+    <div style="
+        position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 60%; height: 1px;
+        background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+    "></div>
+    <div style="
+        display: inline-block;
+        padding: 6px 18px;
+        border: 1px solid rgba(201,168,76,0.5);
+        border-radius: 100px;
+        font-size: 11px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: #C9A84C;
+        background: rgba(201,168,76,0.15);
+        margin-bottom: 20px;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600;
+    ">✦ AI-Powered Lending Intelligence</div>
+    <div style="
+        font-family: 'Playfair Display', serif;
+        font-size: 52px;
+        font-weight: 700;
+        color: #F0EBE0;
+        line-height: 1.1;
+        margin-bottom: 12px;
+    ">Loan<span style="color:#C9A84C;">Sahayak</span></div>
+    <div style="
+        font-size: 16px;
+        color: #9A9080;
+        font-weight: 300;
+        letter-spacing: 0.3px;
+        font-family: 'DM Sans', sans-serif;
+    ">Secure Access to AI Loan Intelligence</div>
+</div>
+""", unsafe_allow_html=True)
+
+    choice = st.radio("", ["🔐  Login", "✨  Signup"])
     users = load_users()
 
-    # -------- LOGIN --------
-    if choice == "Login":
+    if choice == "🔐  Login":
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
-
-        if st.button("Login"):
-
+        if st.button("🔐  Login"):
             if username == "" or password == "":
                 st.warning("Please enter both fields")
-
             else:
                 user = users[
                     (users["username"] == username) &
                     (users["password"] == hash_password(password))
                 ]
-
                 if not user.empty:
                     st.session_state.logged_in = True
                     st.session_state.username = username
-                    st.success("Login Successful!")
+                    st.success("✓ Login Successful!")
                     st.rerun()
                 else:
-                    st.error("Invalid username or password")
-
-    # -------- SIGNUP --------
+                    st.error("✕ Invalid username or password")
     else:
         new_user = st.text_input("Create Username")
         new_pass = st.text_input("Create Password", type="password")
         confirm_pass = st.text_input("Confirm Password", type="password")
-
-        if st.button("Signup"):
-
+        if st.button("✨  Create Account"):
             if new_user == "" or new_pass == "":
                 st.warning("Fields cannot be empty")
-
             elif not is_valid_username(new_user):
-                st.error("Username must be 4-20 chars (letters, numbers, _ . only)")
-
+                st.error("Username must be 4–20 chars (letters, numbers, _ . only)")
             elif not is_valid_password(new_pass):
                 st.error("Password must have uppercase, lowercase & number")
-
             elif new_pass != confirm_pass:
                 st.error("Passwords do not match")
-
             elif new_user.lower() in users["username"].str.lower().values:
                 st.warning("Username already exists")
-
             else:
                 save_user(new_user, hash_password(new_pass))
-                st.success("Account created successfully! Please login.")
+                st.success("✓ Account created! Please login.")
 # -----------------------------------
 # LOGIN CHECK
 # -----------------------------------
@@ -138,7 +310,6 @@ st.markdown(f"""
     👋 Welcome !! <b>{st.session_state.username}</b> ..System status: Active. LoanSahayak is ready to transform your data into definitive financial insights
 </div>
 """, unsafe_allow_html=True)
-
 
 
 
